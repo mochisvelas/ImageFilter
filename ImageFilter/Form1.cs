@@ -16,5 +16,15 @@ namespace ImageFilter
         {
             InitializeComponent();
         }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            var dlg = new OpenFileDialog();
+            dlg.Filter = "Image files (*.jpg, *.jpeg, *.jpe, *.jfif, *.png) | *.jpg; *.jpeg; *.jpe; *.jfif; *.png";
+            if (dlg.ShowDialog() != DialogResult.OK)
+            {
+                return;
+            }
+        }
     }
 }
