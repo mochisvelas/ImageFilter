@@ -16,7 +16,7 @@ namespace ImageFilter
             return bitmap;
         }
 
-        public Bitmap ConvertToGrayScale(Bitmap bmp) 
+        public Bitmap ConvertToGrayScale(Bitmap bmp)
         {
             Bitmap imgbmp = bmp;
             int x, y;
@@ -30,6 +30,48 @@ namespace ImageFilter
                     imgbmp.SetPixel(x, y, newColor);
                 }
             }
+            return imgbmp;
+        }
+
+        public Bitmap ConvertToKernel(Bitmap bmp, int sel)
+        {
+            double[,] kernel;
+            switch (sel)
+            {
+                case 1:
+                    kernel = new double[3, 3] { { 0.0625, 0.125, 0.0625 }, { 0.125, 0.25, 0.125 }, { 0.0625, 0.125, 0.0625 } };
+                    break;
+                case 2:
+                    kernel = new double[3, 3] { { -2, -1, 0 }, { -1, 1, 1 }, { 0, 1, 2 } };
+                    break;
+                case 3:
+                    kernel = new double[3, 3] { { -1, -2, -1 }, { 0, 0, 0 }, { 1, 2, 1 } };
+                    break;
+                case 4:
+                    kernel = new double[3, 3] { { 1, 2, 1 }, { 0, 0, 0 }, { -1, -2, -1 } };
+                    break;
+                case 5:
+                    kernel = new double[3, 3] { { 1, 0, -1 }, { 2, 0, -2 }, { 1, 0, -1 } };
+                    break;
+                case 6:
+                    kernel = new double[3, 3] { { -1, 0, 1 }, { -2, 0, 2 }, { -1, 0, 1 } };
+                    break;
+                case 7:
+                    kernel = new double[3, 3] { { -1, -1, -1 }, { -1, 8, -1 }, { -1, -1, -1 } };
+                    break;
+                case 8:
+                    kernel = new double[3, 3] { { 0, -1, 0 }, { -1, 5, -1 }, { 0, -1, 0 } };
+                    break;
+                case 9:
+                    kernel = new double[3, 3] { { 0, 0, 0 }, { 0, 1, 0 }, { 0, 0, 0 } };
+                    break;
+                case 10:
+                    kernel = new double[3, 3] { { 0, 0, 0 }, { 0, 2, 0 }, { 0, 0, 0 } };
+                    break;
+                default:
+                    break;
+            }             
+            Bitmap imgbmp = bmp;
             return imgbmp;
         }
     }
