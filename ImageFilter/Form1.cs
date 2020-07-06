@@ -20,7 +20,8 @@ namespace ImageFilter
             {
                 var filePath = dlg.FileName;
                 Bitmap imgbmp = imgManager.ConvertToBitmap(filePath);
-                pictureBox1.Image = imgManager.ConvertToGrayScale(imgbmp);
+                pictureBox1.Image = imgManager.ConvertToKernel(imgManager.ConvertToGrayScale(imgbmp), 1);
+                pictureBox2.Image = imgManager.ConvertToGrayScale(imgbmp);
             } 
         }
     }
