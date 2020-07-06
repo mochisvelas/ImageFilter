@@ -9,6 +9,7 @@ namespace ImageFilter
         ImgManipulation imgManager = new ImgManipulation();
         string filePath = string.Empty;
         Bitmap img;
+        Bitmap gray;
         public Form1()
         {
             InitializeComponent();
@@ -32,13 +33,27 @@ namespace ImageFilter
                 filePath = dlg.FileName;
                 img = imgManager.ConvertToBitmap(filePath);
                 pictureBox2.Image = img;
-                pictureBox1.Image = imgManager.ConvertToGrayScale(img);                
+                gray = imgManager.ConvertToGrayScale(img);
+                pictureBox1.Image = gray;                
             } 
         }
 
         private void button1_Click_1(object sender, EventArgs e)
         {
-            pictureBox3.Image = imgManager.ConvertToKernel(imgManager.ConvertToGrayScale(img), 1);
+            string sel = comboBox1.Text;
+            if (string.IsNullOrEmpty(sel) || string.IsNullOrEmpty(filePath))
+            {
+                MessageBox.Show("Elementos incompletos", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
+            else
+            {
+                pictureBox3.Image = imgManager.ConvertToKernel(gray, sel);
+            }            
+        }
+
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {            
+
         }
     }
 }

@@ -36,52 +36,81 @@ namespace ImageFilter
             return clone;
         }
 
-        public Bitmap ConvertToKernel(Bitmap bmp, int sel)
+        public Bitmap ConvertToKernel(Bitmap bmp, string sel)
         {
-            double[,] kernel;
+            double[,] kernel= { { 0, 0, 0 }, { 0, 1, 0 }, { 0, 0, 0 } };
+            switch (sel)
+            {
+                case "Difuminar":
+                    kernel = new double[3, 3] { { 0.0625, 0.125, 0.0625 }, { 0.125, 0.25, 0.125 }, { 0.0625, 0.125, 0.0625 } };
+                    break;
+                case "Realzar":
+                    kernel = new double[3, 3] { { -2, -1, 0 }, { -1, 1, 1 }, { 0, 1, 2 } };
+                    break;
+                case "Sobel inferior":
+                    kernel = new double[3, 3] { { -1, -2, -1 }, { 0, 0, 0 }, { 1, 2, 1 } };
+                    break;
+                case "Sobel superior":
+                    kernel = new double[3, 3] { { 1, 2, 1 }, { 0, 0, 0 }, { -1, -2, -1 } };
+                    break;
+                case "Sobel izquierdo":
+                    kernel = new double[3, 3] { { 1, 0, -1 }, { 2, 0, -2 }, { 1, 0, -1 } };
+                    break;
+                case "Soberl derecho":
+                    kernel = new double[3, 3] { { -1, 0, 1 }, { -2, 0, 2 }, { -1, 0, 1 } };
+                    break;
+                case "Contorno":
+                    kernel = new double[3, 3] { { -1, -1, -1 }, { -1, 8, -1 }, { -1, -1, -1 } };
+                    break;
+                case "Afilar":
+                    kernel = new double[3, 3] { { 0, -1, 0 }, { -1, 5, -1 }, { 0, -1, 0 } };
+                    break;
+                case "Original":
+                    kernel = new double[3, 3] { { 0, 0, 0 }, { 0, 1, 0 }, { 0, 0, 0 } };
+                    break;
+                default:
+                    break;
+            }
             Bitmap original = bmp;
             Bitmap clone = new Bitmap(original);
-            DirectConvolution(original, clone);
-            //switch (sel)
-            //{
-            //    case 1:
-            //        kernel = new double[3, 3] { { 0.0625, 0.125, 0.0625 }, { 0.125, 0.25, 0.125 }, { 0.0625, 0.125, 0.0625 } };
-            //        break;
-            //    case 2:
-            //        kernel = new double[3, 3] { { -2, -1, 0 }, { -1, 1, 1 }, { 0, 1, 2 } };
-            //        break;
-            //    case 3:
-            //        kernel = new double[3, 3] { { -1, -2, -1 }, { 0, 0, 0 }, { 1, 2, 1 } };
-            //        break;
-            //    case 4:
-            //        kernel = new double[3, 3] { { 1, 2, 1 }, { 0, 0, 0 }, { -1, -2, -1 } };
-            //        break;
-            //    case 5:
-            //        kernel = new double[3, 3] { { 1, 0, -1 }, { 2, 0, -2 }, { 1, 0, -1 } };
-            //        break;
-            //    case 6:
-            //        kernel = new double[3, 3] { { -1, 0, 1 }, { -2, 0, 2 }, { -1, 0, 1 } };
-            //        break;
-            //    case 7:
-            //        kernel = new double[3, 3] { { -1, -1, -1 }, { -1, 8, -1 }, { -1, -1, -1 } };
-            //        break;
-            //    case 8:
-            //        kernel = new double[3, 3] { { 0, -1, 0 }, { -1, 5, -1 }, { 0, -1, 0 } };
-            //        break;
-            //    case 9:
-            //        kernel = new double[3, 3] { { 0, 0, 0 }, { 0, 1, 0 }, { 0, 0, 0 } };
-            //        break;
-            //    case 10:
-            //        kernel = new double[3, 3] { { 0, 0, 0 }, { 0, 2, 0 }, { 0, 0, 0 } };
-            //        break;
-            //    default:
-            //        break;
-            //}
-            //BitmapData data = bmp.LockBits(new Rectangle(0, 0, bmp.Width, bmp.Height),
-            //ImageLockMode.ReadOnly,
-            //PixelFormat.Format32bppRgb);
-            ////Bitmap original = bmp;
-            ////Bitmap clone = new Bitmap(original);
+            double val = 0;
+            double sum = 0;
+            for (int i = 0; i < kernel.GetLength(0); i++)
+            {
+                for (int j = 0; j < kernel.GetLength(1); j++)
+                {
+                    sum += kernel[i, j];
+                }
+            }
+            if (sum == 0)
+            {
+                sum = 1;
+            }
+            for (int i = 0; i < original.Width - 2; i++)
+            {
+                for (int j = 0; j < original.Height - 2; j++)
+                {
+                    var pixel = original.GetPixel(i, j);
+                    var gg = pixel.R;
+                    val = (kernel[0, 0] * original.GetPixel(i, j).R) + (kernel[0, 1] * original.GetPixel(i, j + 1).R) +
+                          (kernel[0, 2] * original.GetPixel(i, j + 2).R) + (kernel[1, 0] * original.GetPixel(i + 1, j).R) +
+                          (kernel[1, 1] * original.GetPixel(i + 1, j + 1).R) + (kernel[1, 2] * original.GetPixel(i + 1, j + 2).R) +
+                          (kernel[2, 0] * original.GetPixel(i + 2, j).R) + (kernel[2, 1] * original.GetPixel(i + 2, j + 1).R) +
+                          (kernel[2, 2] * original.GetPixel(i + 2, j + 2).R);
+
+                    val = val / sum;
+                    if (val < 0)
+                    {
+                        val = 0;
+                    }
+                    else if (val > 255)
+                    {
+                        val = 255;
+                    }
+                    Color newColor = Color.FromArgb((int)val, (int)val, (int)val);
+                    clone.SetPixel(i, j, newColor);
+                }
+            }
             return clone;
         }
 
