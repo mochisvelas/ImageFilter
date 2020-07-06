@@ -21,7 +21,7 @@ namespace ImageFilter
             comboBox1.Items.Add("Soberl derecho");
             comboBox1.Items.Add("Contorno");
             comboBox1.Items.Add("Afilar");
-            comboBox1.Items.Add("Original");
+            comboBox1.Items.Add("Original");            
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -34,7 +34,8 @@ namespace ImageFilter
                 img = imgManager.ConvertToBitmap(filePath);
                 pictureBox2.Image = img;
                 gray = imgManager.ConvertToGrayScale(img);
-                pictureBox1.Image = gray;                
+                pictureBox1.Image = gray;
+                pictureBox3.Image = null;
             } 
         }
 
@@ -47,13 +48,31 @@ namespace ImageFilter
             }
             else
             {
-                pictureBox3.Image = imgManager.ConvertToKernel(gray, sel);
+                pictureBox3.Image = imgManager.ConvertToKernel(gray, sel, null);
             }            
         }
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
-        {            
+        {
+        }
 
+        private void numericUpDown1_ValueChanged(object sender, EventArgs e)
+        {           
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(filePath))
+            {
+                MessageBox.Show("Elementos incompletos", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
+            else
+            {
+                double[,] kernel = { { (double)numericUpDown1.Value, (double)numericUpDown2.Value, (double)numericUpDown3.Value },
+                { (double)numericUpDown6.Value, (double)numericUpDown5.Value, (double)numericUpDown4.Value },
+                { (double)numericUpDown9.Value, (double)numericUpDown8.Value, (double)numericUpDown7.Value } };
+                pictureBox3.Image = imgManager.ConvertToKernel(gray, "", kernel);
+            }            
         }
     }
 }
