@@ -104,7 +104,7 @@ namespace ImageFilter
                           (kernel[2, 0] * original.GetPixel(i + 2, j).R) + (kernel[2, 1] * original.GetPixel(i + 2, j + 1).R) +
                           (kernel[2, 2] * original.GetPixel(i + 2, j + 2).R);
 
-                    val = val / sum;
+                    val /= sum;
                     if (val < 0)
                     {
                         val = 0;
@@ -114,7 +114,43 @@ namespace ImageFilter
                         val = 255;
                     }
                     Color newColor = Color.FromArgb((int)val, (int)val, (int)val);
-                    clone.SetPixel(i, j, newColor);
+                    clone.SetPixel(i+1, j+1, newColor);
+                    if (i == 0 && j == original.Height - 2)
+                    {
+                        clone.SetPixel(i, j + 1, newColor);
+                        clone.SetPixel(i, j + 2, newColor);
+                        clone.SetPixel(i + 1, j + 2, newColor);
+                        clone.SetPixel(i, j, newColor);
+                    }
+                    else if (j == 0 && i == original.Width - 2)
+                    {
+                        clone.SetPixel(i + 1, j, newColor);
+                        clone.SetPixel(i + 2, j, newColor);
+                        clone.SetPixel(i + 2, j + 1, newColor);
+                        clone.SetPixel(i, j, newColor);
+                    }
+                    else if (i == original.Width - 2 && j == original.Height - 2)
+                    {
+                        clone.SetPixel(i + 2, j + 1, newColor);
+                        clone.SetPixel(i + 1, j + 2, newColor);
+                        clone.SetPixel(i + 2, j + 2, newColor);
+                    }
+                    else if (j == original.Height - 2)
+                    {
+                        clone.SetPixel(i + 1, j + 2, newColor);
+                    }
+                    else if (i == original.Width - 2)
+                    {
+                        clone.SetPixel(i + 2, j + 1, newColor);
+                    }
+                    else if (j == 0)
+                    {
+                        clone.SetPixel(i, j, newColor);
+                    }
+                    else if (i == 0)
+                    {
+                        clone.SetPixel(i, j, newColor);
+                    }
                 }
             }
             return clone;
