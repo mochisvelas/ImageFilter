@@ -20,7 +20,8 @@ namespace ImageFilter
 
         public Bitmap ConvertToGrayScale(Bitmap bmp)
         {
-            Bitmap imgbmp = bmp;
+            Bitmap original = bmp;
+            Bitmap clone = new Bitmap(original);
             int x, y;
             for (x = 0; x < bmp.Width; x++)
             {
@@ -29,10 +30,10 @@ namespace ImageFilter
                     Color oc = bmp.GetPixel(x, y);
                     int grayScale = (int)((oc.R * 0.3) + (oc.G * 0.59) + (oc.B * 0.11));
                     Color newColor = Color.FromArgb(oc.A, grayScale, grayScale, grayScale);
-                    imgbmp.SetPixel(x, y, newColor);
+                    clone.SetPixel(x, y, newColor);
                 }
             }
-            return imgbmp;
+            return clone;
         }
 
         public Bitmap ConvertToKernel(Bitmap bmp, int sel)
