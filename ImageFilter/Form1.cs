@@ -33,8 +33,10 @@ namespace ImageFilter
                 filePath = dlg.FileName;
                 img = imgManager.ConvertToBitmap(filePath);
                 pictureBox2.Image = img;
+                pictureBox2.SizeMode = PictureBoxSizeMode.StretchImage;
                 gray = imgManager.ConvertToGrayScale(img);
                 pictureBox1.Image = gray;
+                pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
                 pictureBox3.Image = null;
             } 
         }
@@ -49,7 +51,8 @@ namespace ImageFilter
             else
             {
                 pictureBox3.Image = imgManager.ConvertToKernel(gray, sel, null);
-            }            
+                pictureBox3.SizeMode = PictureBoxSizeMode.StretchImage;
+            }
         }
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
@@ -72,7 +75,8 @@ namespace ImageFilter
                 { (double)numericUpDown6.Value, (double)numericUpDown5.Value, (double)numericUpDown4.Value },
                 { (double)numericUpDown9.Value, (double)numericUpDown8.Value, (double)numericUpDown7.Value } };
                 pictureBox3.Image = imgManager.ConvertToKernel(gray, "", kernel);
-            }            
+                pictureBox3.SizeMode = PictureBoxSizeMode.StretchImage;
+            }
         }
     }
 }

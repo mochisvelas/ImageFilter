@@ -27,9 +27,9 @@ namespace ImageFilter
             {
                 for (y = 0; y < bmp.Height; y++)
                 {
-                    Color oc = bmp.GetPixel(x, y);
-                    int grayScale = (int)((oc.R * 0.3) + (oc.G * 0.59) + (oc.B * 0.11));
-                    Color newColor = Color.FromArgb(oc.A, grayScale, grayScale, grayScale);
+                    Color originalColor = bmp.GetPixel(x, y);
+                    int grayScale = (int)((originalColor.R * 0.3) + (originalColor.G * 0.59) + (originalColor.B * 0.11));
+                    Color newColor = Color.FromArgb(originalColor.A, grayScale, grayScale, grayScale);
                     clone.SetPixel(x, y, newColor);
                 }
             }
@@ -154,52 +154,6 @@ namespace ImageFilter
                 }
             }
             return clone;
-        }
-
-        public Bitmap DirectConvolution(Bitmap original, Bitmap clone)
-        {
-            double[,] kernelx = { { -2, -1, 0 }, { -1, 1, 1 }, { 0, 1, 2 } };
-            double val = 0;
-            double sum = 0;
-            for (int i = 0; i < kernelx.GetLength(0); i++)
-            {
-                for (int j = 0; j < kernelx.GetLength(1); j++)
-                {
-                    sum += kernelx[i, j];
-                }
-            }
-            if (sum == 0)
-            {
-                sum = 1;
-            }
-            for (int i = 0; i < original.Width - 2; i++)
-            {
-                for (int j = 0; j < original.Height - 2; j++)
-                {
-                    var pixel = original.GetPixel(i, j);
-                    var gg = pixel.R;
-                    val = (kernelx[0, 0] * original.GetPixel(i, j).R) + (kernelx[0, 1] * original.GetPixel(i, j + 1).R) +
-                          (kernelx[0, 2] * original.GetPixel(i, j + 2).R) + (kernelx[1, 0] * original.GetPixel(i + 1, j).R) +
-                          (kernelx[1, 1] * original.GetPixel(i + 1, j + 1).R) + (kernelx[1, 2] * original.GetPixel(i + 1, j + 2).R) +
-                          (kernelx[2, 0] * original.GetPixel(i + 2, j).R) + (kernelx[2, 1] * original.GetPixel(i + 2, j + 1).R) +
-                          (kernelx[2, 2] * original.GetPixel(i + 2, j + 2).R);
-
-                    val = val / sum;
-                    if (val < 0)
-                    {
-                        val = 0;
-                    }
-                    else if (val > 255)
-                    {
-                        val = 255;
-                    }
-                    Color newColor = Color.FromArgb((int)val, (int)val, (int)val);
-                    clone.SetPixel(i, j, newColor);
-                }
-                //File outputfile = new File("src/image/edge.png");
-                //ImageIO.write(temp, "png", outputfile);
-            }
-            return clone;
-        }
+        }        
     }
 }
